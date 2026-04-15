@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(go build *)",
+      "Bash(npx tsc *)",
+      "Bash(go run *)",
+      "Bash(npm start *)",
+      "Bash(PORT=3001 npm start)",
+      "Bash(pkill -f \"go run ./src/main.go\")",
+      "Bash(pkill -f \"mud_server\")",
+      "Bash(netstat -ano)",
+      "Bash(taskkill /PID 12088 /F)",
+      "Bash(cmd /c \"taskkill /PID 12088 /F\")",
+      "Bash(cmd /c \"taskkill /PID 12088 /F 2>&1\")",
+      "Bash(powershell -Command \"Stop-Process -Id 12088 -Force\")",
+      "Bash(curl -s http://127.0.0.1:8080/api/nodes)",
+      "Bash(curl -s -X OPTIONS http://127.0.0.1:8080/api/nodes -H \"Origin: http://localhost:3001\" -H \"Access-Control-Request-Method: PUT\" -v)",
+      "Bash(curl -s -X POST http://127.0.0.1:8080/api/nodes -H 'Content-Type: application/json' -H 'Origin: http://localhost:3001' -d '{\"Name\":\"Test Room\",\"Description\":\"A test room\",\"ExitJSON\":\"{}\"}' -v)"
+    ]
+  }
+}

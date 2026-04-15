@@ -35,8 +35,15 @@ export const RoomDetailDiv : FC<Props> = ({nodes, setNodes, selectedNodeID, setS
   }
 
   function handleSave() {
-    const exitJSON = JSON.stringify({ N: exitN, S: exitS, E: exitE, W: exitW, U: exitU, D: exitD });
-    saveNodeData(selectedNodeID, roomName, roomDescription, exitJSON);
+    // Only include exits that have a valid numeric room ID; the server
+    // uses float64 type assertions so string values are silently dropped.
+    const exits: Record<string, number> = {};
+    const dirMap: Record<string, string> = { N: exitN, S: exitS, E: exitE, W: exitW, U: exitU, D: exitD };
+    for (const [dir, val] of Object.entries(dirMap)) {
+      const id = parseInt(val);
+      if (!isNaN(id) && id > 0) exits[dir] = id;
+    }
+    saveNodeData(selectedNodeID, roomName, roomDescription, JSON.stringify(exits));
   }
 
   function handleLinkClick(roomid : string) {
