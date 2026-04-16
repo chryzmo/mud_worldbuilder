@@ -9,18 +9,19 @@ import {
   Node
 } from '@xyflow/react';
 
-import { saveNodeData } from '../FetchData';
+import { saveNodeData, deleteNodeData } from '../FetchData';
 
 interface Props {
     nodes : Node[];
     setNodes : React.Dispatch<React.SetStateAction<Node[]>>;
     selectedNodeID : string;
     setSelectedNodeID : React.Dispatch<React.SetStateAction<string>>;
+    onRefresh : () => Promise<void>;
   }
 
 
 
-export const RoomDetailDiv : FC<Props> = ({nodes, setNodes, selectedNodeID, setSelectedNodeID}) : ReactElement => {
+export const RoomDetailDiv : FC<Props> = ({nodes, setNodes, selectedNodeID, setSelectedNodeID, onRefresh}) : ReactElement => {
   const [roomName, setRoomName] = useState<string>("");
   const [roomDescription, setRoomDescription] = useState<string>("");
   const [exitN, setExitN] = useState<string>("");
@@ -34,7 +35,13 @@ export const RoomDetailDiv : FC<Props> = ({nodes, setNodes, selectedNodeID, setS
     setRoomName(evt.target.value)
   }
 
-  function handleSave() {
+  async function handleDelete() {
+    await deleteNodeData(selectedNodeID);
+    setSelectedNodeID("0");
+    await onRefresh();
+  }
+
+  async function handleSave() {
     // Only include exits that have a valid numeric room ID; the server
     // uses float64 type assertions so string values are silently dropped.
     const exits: Record<string, number> = {};
@@ -43,7 +50,8 @@ export const RoomDetailDiv : FC<Props> = ({nodes, setNodes, selectedNodeID, setS
       const id = parseInt(val);
       if (!isNaN(id) && id > 0) exits[dir] = id;
     }
-    saveNodeData(selectedNodeID, roomName, roomDescription, JSON.stringify(exits));
+    await saveNodeData(selectedNodeID, roomName, roomDescription, JSON.stringify(exits));
+    await onRefresh();
   }
 
   function handleLinkClick(roomid : string) {
@@ -187,6 +195,7 @@ export const RoomDetailDiv : FC<Props> = ({nodes, setNodes, selectedNodeID, setS
       {selectedNodeID}
       <br/>
       <button onClick={handleSave}>Save Room</button>
+      <button onClick={handleDelete}>Delete Room</button>
       <br/>
       <label>Room Name:</label>
       <input
