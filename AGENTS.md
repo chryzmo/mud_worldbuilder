@@ -24,10 +24,18 @@ plan before investing in new features here.
 npm install
 PORT=3001 npm start   # the package.json script uses Windows `set PORT=3001`
 npm run build
-npx tsc --noEmit
+scripts/test.sh       # type check (there are no real tests yet)
 ```
 
 Requires `../mud_server` running locally on port 8080.
+
+## Tests: run them before you finish
+
+- `scripts/test.sh` runs every check for this repo. Run it before finishing any change and fix
+  failures; don't leave them for the next person. Add or update tests along with behavior changes.
+- In Claude Code, `.claude/settings.json` adds a Stop hook (`scripts/agent-stop-hook.sh`) that runs
+  `scripts/test.sh` when a turn changed the repo and sends failures back to you. Other agents:
+  run it yourself. The hook skips turns that didn't change the working tree.
 
 ## Known limits
 
